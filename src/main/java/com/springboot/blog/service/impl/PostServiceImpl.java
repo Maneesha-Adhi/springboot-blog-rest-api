@@ -34,8 +34,8 @@ public class PostServiceImpl implements PostService {
 
         Post newPost = postRepository.save(post);
 
-        /// convert entity to DTO
-        PostDto postResponse = mapToDTO(post);
+        // convert entity to DTO
+        PostDto postResponse = mapToDTO(newPost);
 
         return postResponse;
     }
