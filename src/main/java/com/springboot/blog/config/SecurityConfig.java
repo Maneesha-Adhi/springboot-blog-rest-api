@@ -23,17 +23,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
     private UserDetailsService userDetailsService;
 
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private JwtAuthenticationFilter authenticationFilter;
 
-    public SecurityConfig(
-            UserDetailsService userDetailsService,
-            JwtAuthenticationEntryPoint authenticationEntryPoint,
-            JwtAuthenticationFilter authenticationFilter
-    ) {
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          JwtAuthenticationEntryPoint authenticationEntryPoint,
+                          JwtAuthenticationFilter authenticationFilter) {
         this.userDetailsService = userDetailsService;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.authenticationFilter = authenticationFilter;
@@ -51,15 +50,19 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests((authorize) ->
-//                        authorize.anyRequest().authenticated()
-                                authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                                        .requestMatchers("/api/auth/**").permitAll()
-                                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.csrf().disable()
+                .authorizeHttpRequests((authorize) ->
+                        //authorize.anyRequest().authenticated()
+                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .anyRequest().authenticated()
+
+                ).exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                ).sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -67,8 +70,8 @@ public class SecurityConfig {
     }
 
 //    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.builder()
+//    public UserDetailsService userDetailsService(){
+//        UserDetails ramesh = User.builder()
 //                .username("user")
 //                .password(passwordEncoder().encode("user"))
 //                .roles("USER")
@@ -79,7 +82,6 @@ public class SecurityConfig {
 //                .password(passwordEncoder().encode("admin"))
 //                .roles("ADMIN")
 //                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
+//        return new InMemoryUserDetailsManager(ramesh, admin);
 //    }
 }
