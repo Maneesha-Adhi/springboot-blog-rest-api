@@ -113,6 +113,16 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
+    @Override
+    public List<PostDto> getPostsByCategoryId(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
+                new ResourceNotFoundException("Category", "id", categoryId));
+
+        List<Post> posts = postRepository.findByCategoryId(categoryId);
+
+        return posts.stream().map((post) -> mapToDTO(post)).collect(Collectors.toList());
+    }
+
     // convert Entity into DTO
     private PostDto mapToDTO(Post post) {
         PostDto postDto = modelMapper.map(post, PostDto.class);
