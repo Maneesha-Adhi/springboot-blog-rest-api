@@ -77,7 +77,7 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping(value = "/api/posts/{id}", headers = {"X-API-VERSION=1"})
+    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.java-api.v1+json")
     public ResponseEntity<PostDto> getPostIdV1(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
@@ -91,7 +91,7 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping(value = "/api/posts/{id}", headers = {"X-API-VERSION=2"})
+    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.java-api.v2+json")
     public ResponseEntity<PostDtoV2> getPostIdV2(@PathVariable(name = "id") long id) {
         PostDto postDto = postService.getPostById(id);
         PostDtoV2 postDtoV2 = new PostDtoV2();
