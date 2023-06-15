@@ -1,7 +1,6 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.payload.PostDto;
-import com.springboot.blog.payload.PostDtoV2;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.AppConstants;
@@ -15,11 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/api/v1/posts")
+@RequestMapping()
 @Tag(
         name = "CRUD REST APIs for Post Resource"
 )
@@ -77,38 +75,9 @@ public class PostController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.java-api.v1+json")
-    public ResponseEntity<PostDto> getPostIdV1(@PathVariable(name = "id") long id) {
+    @GetMapping(value = "/api/v1/posts/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
-    }
-
-    // get post by id
-    @Operation(
-            summary = "Get Post by Id REST API",
-            description = "Get Post by Id REST API is used to get single post from the database"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Http Status 200 SUCCESS"
-    )
-    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.java-api.v2+json")
-    public ResponseEntity<PostDtoV2> getPostIdV2(@PathVariable(name = "id") long id) {
-        PostDto postDto = postService.getPostById(id);
-        PostDtoV2 postDtoV2 = new PostDtoV2();
-        postDtoV2.setId(postDto.getId());
-        postDtoV2.setTitle(postDto.getTitle());
-        postDtoV2.setDescription(postDto.getDescription());
-        postDtoV2.setContent(postDto.getContent());
-        postDtoV2.setComments(postDto.getComments());
-        postDtoV2.setCategoryId(postDto.getCategoryId());
-
-        List<String> tags = new ArrayList<>();
-        tags.add("Java");
-        tags.add("Spring Boot");
-        tags.add("AWS");
-        postDtoV2.setTags(tags);
-
-        return ResponseEntity.ok(postDtoV2);
     }
 
     // update post by id rest api
